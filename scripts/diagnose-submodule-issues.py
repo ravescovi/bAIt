@@ -14,6 +14,9 @@ from typing import Dict, List, Tuple, Optional
 import os
 
 # Import functions from other scripts
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from check_submodule_access import get_submodule_urls, check_git_access
 
 

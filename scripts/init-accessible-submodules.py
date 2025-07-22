@@ -14,7 +14,10 @@ from typing import Dict, List
 import json
 
 # Import the access checker
-from check_submodule_access import get_submodule_urls, check_git_access, categorize_submodules
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from check-submodule-access import get_submodule_urls, check_git_access, categorize_submodules
 
 
 def get_initialized_submodules() -> List[str]:

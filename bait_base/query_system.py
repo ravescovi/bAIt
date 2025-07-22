@@ -29,8 +29,8 @@ class QueryResult:
     answer: str
     confidence: float
     source: str
-    details: dict[str, Any]
-    related_data: list[dict[str, Any]]
+    details: dict
+    related_data: list
 
 
 class QueryProcessor:
@@ -125,7 +125,7 @@ class QueryProcessor:
                 related_data=[]
             )
 
-    def _find_query_handler(self, query_text: str) -> callable | None:
+    def _find_query_handler(self, query_text: str):
         """Find the appropriate query handler based on patterns."""
         for pattern, handler in self.query_patterns.items():
             if re.search(pattern, query_text, re.IGNORECASE):
