@@ -1,0 +1,72 @@
+{
+  "deployment": {
+    "name": "8id-bits",
+    "description": "8-ID Dynamic Scattering Beamline",
+    "version": "1.0.0",
+    "beamline": "8-ID",
+    "sector": "8",
+    "facility": "APS",
+    "last_analyzed": "2024-07-22T10:00:00Z",
+    "maintainer": "8-ID Team",
+    "contact": "8id-team@aps.anl.gov"
+  },
+  "sources": {
+    "iocs": {
+      "repository": "https://github.com/aps-8id/8id-iocs",
+      "branch": "main",
+      "local_path": "./bits_deployments/8id-bits/",
+      "description": "EPICS IOC configurations for 8-ID beamline",
+      "folders": [
+        {
+          "name": "motor_ioc",
+          "description": "Motor control IOC",
+          "startup_file": "st.cmd",
+          "database_files": ["motors.db"]
+        },
+        {
+          "name": "detector_ioc", 
+          "description": "Detector control IOC",
+          "startup_file": "st.cmd",
+          "database_files": ["detectors.db", "areadetector.db"]
+        }
+      ]
+    },
+    "bits_deployment": {
+      "repository": "https://github.com/BCDA-APS/8id-bits.git",
+      "branch": "main",
+      "local_path": "./bits_deployments/8id-bits/",
+      "description": "Bluesky instrument configuration for 8-ID",
+      "startup_file": "src/id8_i/startup.py",
+      "config_files": [
+        "src/id8_i/configs/iconfig.yml",
+        "src/id8_i/configs/devices.yml"
+      ]
+    }
+  },
+  "network": {
+    "subnet": "164.54.xxx.xxx/24",
+    "domain": "xray.aps.anl.gov",
+    "hosts": [
+      {
+        "name": "8id-ws1",
+        "ip": "164.54.xxx.100",
+        "role": "workstation",
+        "description": "Main workstation"
+      }
+    ],
+    "services": [
+      {
+        "name": "queueserver",
+        "port": 60615,
+        "protocol": "tcp",
+        "description": "Bluesky Queue Server"
+      }
+    ]
+  },
+  "analysis_settings": {
+    "auto_update": true,
+    "cache_results": true,
+    "generate_reports": true,
+    "enable_visualization": true
+  }
+}
