@@ -1,0 +1,54 @@
+[submodule "bits_base/apstools"]
+	path = bits_base/apstools
+	url = https://github.com/BCDA-APS/apstools.git
+[submodule "bits_base/BITS"]
+	path = bits_base/BITS
+	url = https://github.com/BCDA-APS/BITS.git
+[submodule "bits_base/BITS-Starter"]
+	path = bits_base/BITS-Starter
+	url = https://github.com/BCDA-APS/BITS-Starter.git
+[submodule "bits_base/guarneri"]
+	path = bits_base/guarneri
+	url = https://github.com/BCDA-APS/guarneri.git
+[submodule "bits_deployments/12id-bits"]
+	path = bits_deployments/12id-bits
+	url = https://github.com/BCDA-APS/12id-bits.git
+[submodule "bits_deployments/16bm-bits"]
+	path = bits_deployments/16bm-bits
+	url = https://github.com/BCDA-APS/16bm-bits.git
+[submodule "bits_deployments/28id-bits"]
+	path = bits_deployments/28id-bits
+	url = https://github.com/BCDA-APS/28id-bits.git
+[submodule "bits_deployments/8id-bits"]
+	path = bits_deployments/8id-bits
+	url = https://github.com/BCDA-APS/8id-bits.git
+[submodule "bits_deployments/9id_bits"]
+	path = bits_deployments/9id_bits
+	url = https://github.com/BCDA-APS/9id_bits.git
+[submodule "bits_deployments/bluesky-mic"]
+	path = bits_deployments/bluesky-mic
+	url = https://github.com/BCDA-APS/bluesky-mic.git
+[submodule "bits_deployments/haven"]
+	path = bits_deployments/haven
+	url = https://github.com/spc-group/haven.git
+[submodule "bits_deployments/polar-bits"]
+	path = bits_deployments/polar-bits
+	url = https://github.com/BCDA-APS/polar-bits.git
+[submodule "bits_deployments/tomo-bits"]
+	path = bits_deployments/tomo-bits
+	url = https://github.com/BCDA-APS/tomo-bits.git
+[submodule "bits_deployments/usaxs-bits"]
+	path = bits_deployments/usaxs-bits
+	url = https://github.com/BCDA-APS/usaxs-bits.git
+[submodule "resources/bluesky_training"]
+	path = resources/bluesky_training
+	url = https://github.com/BCDA-APS/bluesky_training.git
+[submodule "resources/eureka_beamline"]
+	path = resources/eureka_beamline
+	url = https://github.com/ravescovi/eureka_beamline.git
+[submodule "containers/epics-podman"]
+	path = containers/epics-podman
+	url = https://git.aps.anl.gov/xsd-det/epics-podman.git
+[submodule "bits_base/ophyd-registry"]
+	path = bits_base/ophyd-registry
+	url = https://github.com/BCDA-APS/ophyd-registry.git

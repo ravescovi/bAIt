@@ -1,0 +1,201 @@
+[build-system]
+requires = ["setuptools>=77.0", "setuptools_scm[toml]>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bait"
+dynamic = ["version"]
+description = "bAIt (Bluesky AI Tools) - Analysis and Intelligence Framework for Bluesky Deployments"
+authors = [
+    { name = "Rafael Vescovi", email = "rvescovi@anl.gov" },
+    { name = "Pete Jemian", email = "prjemian+instrument@gmail.com" },
+    { name = "Eric Codrea", email = "ecodrea@anl.gov" },
+]
+maintainers = [
+    { name = "Rafael Vescovi", email = "rvescovi@anl.gov" },
+]
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ['bluesky', 'analysis', 'AI', 'beamline', 'EPICS', 'synchrotron']
+license = "LicenseRef-ANL-Open-Source-License"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "rich>=13.0",
+    "typer>=0.9",
+    "fastapi>=0.100",
+    "uvicorn>=0.20",
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "plotly>=5.0",
+    "networkx>=3.0",
+    "python-multipart>=0.0.6",
+    "httpx>=0.24",
+    "aiofiles>=23.0",
+    "jinja2>=3.0",
+    "openai>=1.0",
+    "langchain>=0.1",
+    "langchain-community>=0.0",
+    "chromadb>=0.4",
+    "sentence-transformers>=2.2",
+    "mcp>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build", 
+    "pytest>=7.0", 
+    "pytest-cov>=4.0",
+    "pytest-mock>=3.10",
+    "pytest-asyncio>=0.21",
+    "ruff>=0.1", 
+    "mypy>=1.5",
+    "pre-commit>=3.0",
+    "black>=23.0",
+    "isort>=5.12",
+]
+
+doc = [
+    "sphinx>=7.0",
+    "sphinx-rtd-theme>=1.3",
+    "myst-parser>=2.0",
+    "sphinx-autodoc-typehints>=1.24",
+    "sphinx-copybutton>=0.5",
+]
+
+visualization = [
+    "cytoscape>=0.2",
+    "plotly>=5.0",
+    "dash>=2.0",
+    "graphviz>=0.20",
+    "pygraphviz>=1.10",
+]
+
+all = ["bait_base[dev,doc,visualization]"]
+
+[project.urls]
+"Homepage" = "https://github.com/ravescovi/bAIt"
+"Bug Tracker" = "https://github.com/ravescovi/bAIt/issues"
+"Documentation" = "https://bait.readthedocs.io"
+"Source Code" = "https://github.com/ravescovi/bAIt"
+
+[project.scripts]
+bait-analyze = "bait_base.cli:analyze"
+bait-report = "bait_base.cli:report"
+bait-query = "bait_base.cli:query"
+bait-visualize = "bait_base.cli:visualize"
+bait-create-deployment = "bait_base.cli:create_deployment"
+bait-update-deployment = "bait_base.cli:update_deployment"
+bait-sync = "bait_base.cli:sync"
+bait-build-knowledge = "bait_base.cli:build_knowledge"
+bait-update-embeddings = "bait_base.cli:update_embeddings"
+bait-test-retrieval = "bait_base.cli:test_retrieval"
+bait-mcp-server = "bait_base.MCP.servers:main"
+
+[tool.setuptools_scm]
+write_to = "bait_base/_version.py"
+version_scheme = "python-simplified-semver"
+local_scheme = "no-local-version"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bait_base*"]
+exclude = ["tests*", "docs*"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+exclude = [
+    ".eggs",
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "build",
+    "dist",
+    "venv",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*" = ["D"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--disable-warnings",
+    "--cov=bait_base",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]
+
+[tool.coverage.run]
+source = ["bait_base"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/conftest.py",
+    "*/_version.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "@abstract",
+]

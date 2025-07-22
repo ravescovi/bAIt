@@ -1,0 +1,231 @@
+# bAIt (Bluesky AI Tools) - Git Ignore Configuration
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Documentation
+docs/_build/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+.idea/
+
+# bAIt specific ignores
+# Analysis cache directories
+bait_deployments/*/analysis_cache/
+**/analysis_cache/
+
+# Reports directory
+bait_deployments/*/reports/
+**/reports/
+
+# Custom configuration overrides
+bait_deployments/*/custom_configs/local_*.json
+**/custom_configs/local_*.json
+
+# Temporary analysis files
+*.tmp
+*.temp
+analysis_*.json.bak
+
+# MCP server logs and cache
+MCP/logs/
+MCP/cache/
+mcp_*.log
+
+# Knowledge system cache
+knowledge/cache/
+*.faiss
+*.pkl
+
+# Visualization output
+visualization/output/
+*.svg.tmp
+*.png.tmp
+
+# Backup files from migration
+MIGRATION-REMOTES.md
+
+# Development and testing files
+test_output/
+sandbox/
+*.debug
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Network files
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Bluesky/EPICS specific
+*.db~
+*.substitutions~
+*.template~
+*.req~
+*.iocsh~
+
+# Log files
+*.log
+*.out
+
+# Configuration files that might contain sensitive information  
+**/local_config.json
+**/secrets.json
+**/*.secret
+
+# Large data files that shouldn't be in version control
+*.hdf5
+*.h5
+*.nxs
+*.dat
+data/
+datasets/
