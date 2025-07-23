@@ -61,3 +61,6 @@
 [submodule "bits_base/eureka_beamline"]
 	path = bits_base/eureka_beamline
 	url = https://github.com/ravescovi/eureka_beamline.git
+[submodule "bits_deployments/tst-nsls-bits"]
+	path = bits_deployments/tst-nsls-bits
+	url = https://github.com/ravescovi/tst-nsls-bits.git
