@@ -17,7 +17,13 @@ import json
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from check-submodule-access import get_submodule_urls, check_git_access, categorize_submodules
+import importlib.util
+spec = importlib.util.spec_from_file_location("check_submodule_access", os.path.join(os.path.dirname(__file__), "check-submodule-access.py"))
+check_submodule_access = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(check_submodule_access)
+get_submodule_urls = check_submodule_access.get_submodule_urls
+check_git_access = check_submodule_access.check_git_access  
+categorize_submodules = check_submodule_access.categorize_submodules
 
 
 def get_initialized_submodules() -> List[str]:
@@ -86,7 +92,7 @@ def main():
         help="Try to initialize even repositories that fail access check"
     )
     parser.add_argument(
-        "--category", choices=["bits_base", "bits_deployments", "resources", "containers"],
+        "--category", choices=["bits_base", "bits_deployments", "nsls_deployments", "resources", "containers"],
         help="Initialize only specific category of submodules"
     )
     parser.add_argument(

@@ -52,3 +52,12 @@
 [submodule "bits_base/ophyd-registry"]
 	path = bits_base/ophyd-registry
 	url = https://github.com/BCDA-APS/ophyd-registry.git
+[submodule "nsls_deployments/bmm-profile-collection"]
+	path = nsls_deployments/bmm-profile-collection
+	url = https://github.com/NSLS2/bmm-profile-collection.git
+[submodule "nsls_deployments/cdi-profile-collection"]
+	path = nsls_deployments/cdi-profile-collection
+	url = https://github.com/NSLS2/cdi-profile-collection.git
+[submodule "nsls_deployments/tst-profile-collection"]
+	path = nsls_deployments/tst-profile-collection
+	url = https://github.com/NSLS2/tst-profile-collection.git
