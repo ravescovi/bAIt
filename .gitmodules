@@ -40,12 +40,6 @@
 [submodule "bits_deployments/usaxs-bits"]
 	path = bits_deployments/usaxs-bits
 	url = https://github.com/BCDA-APS/usaxs-bits.git
-[submodule "resources/bluesky_training"]
-	path = resources/bluesky_training
-	url = https://github.com/BCDA-APS/bluesky_training.git
-[submodule "resources/eureka_beamline"]
-	path = resources/eureka_beamline
-	url = https://github.com/ravescovi/eureka_beamline.git
 [submodule "containers/epics-podman"]
 	path = containers/epics-podman
 	url = https://git.aps.anl.gov/xsd-det/epics-podman.git
@@ -61,3 +55,9 @@
 [submodule "nsls_deployments/tst-profile-collection"]
 	path = nsls_deployments/tst-profile-collection
 	url = https://github.com/NSLS2/tst-profile-collection.git
+[submodule "bits_base/bluesky_training"]
+	path = bits_base/bluesky_training
+	url = https://github.com/BCDA-APS/bluesky_training.git
+[submodule "bits_base/eureka_beamline"]
+	path = bits_base/eureka_beamline
+	url = https://github.com/ravescovi/eureka_beamline.git

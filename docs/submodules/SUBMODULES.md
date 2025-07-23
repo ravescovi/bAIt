@@ -4,7 +4,7 @@ This document provides detailed information about managing git submodules in the
 
 ## Overview
 
-bAIt uses git submodules to integrate 18 separate repositories into a unified analysis framework. This approach provides:
+bAIt uses git submodules to integrate 21 separate repositories into a unified analysis framework. This approach provides:
 
 - **Proper Attribution**: Each repository maintains its own history and ownership
 - **Access Control**: Repository-specific permissions and access management
@@ -18,12 +18,14 @@ bAIt/
 ├── .gitmodules                    # Submodule configuration
 ├── bait_base/                     # Core bAIt framework (not submodule)
 ├── bait_deployments/              # Deployment configs (not submodule)
-├── bits_base/                     # Foundation packages (5 submodules)
+├── bits_base/                     # Foundation packages (7 submodules)
 │   ├── BITS/                      # → github.com/BCDA-APS/BITS
 │   ├── apstools/                  # → github.com/BCDA-APS/apstools
 │   ├── guarneri/                  # → github.com/BCDA-APS/guarneri
 │   ├── BITS-Starter/              # → github.com/BCDA-APS/BITS-Starter
-│   └── ophyd-registry/            # → github.com/BCDA-APS/ophyd-registry
+│   ├── ophyd-registry/            # → github.com/BCDA-APS/ophyd-registry
+│   ├── bluesky_training/          # → github.com/BCDA-APS/bluesky_training
+│   └── eureka_beamline/           # → github.com/ravescovi/eureka_beamline
 ├── bits_deployments/              # Beamline deployments (10 submodules)
 │   ├── 12id-bits/                 # → github.com/BCDA-APS/12id-bits
 │   ├── 16bm-bits/                 # → github.com/BCDA-APS/16bm-bits
@@ -35,9 +37,10 @@ bAIt/
 │   ├── polar-bits/                # → github.com/BCDA-APS/polar-bits
 │   ├── tomo-bits/                 # → github.com/BCDA-APS/tomo-bits
 │   └── usaxs-bits/                # → github.com/BCDA-APS/usaxs-bits
-├── resources/                     # Training and utilities (2 submodules)
-│   ├── bluesky_training/          # → github.com/BCDA-APS/bluesky_training
-│   └── eureka_beamline/           # → github.com/ravescovi/eureka_beamline
+├── nsls_deployments/              # NSLS beamline deployments (3 submodules)
+│   ├── bmm-profile-collection/    # → github.com/NSLS2/bmm-profile-collection
+│   ├── cdi-profile-collection/    # → github.com/NSLS2/cdi-profile-collection
+│   └── tst-profile-collection/    # → github.com/NSLS2/tst-profile-collection
 ├── containers/                    # Container configs (1 submodule)
 │   └── epics-podman/              # → git.aps.anl.gov/xsd-det/epics-podman
 └── scripts/                       # Submodule management tools

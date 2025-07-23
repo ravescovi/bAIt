@@ -86,7 +86,6 @@ def categorize_submodules(submodules: Dict[str, str]) -> Dict[str, List[str]]:
         "bits_base": [],
         "bits_deployments": [],
         "nsls_deployments": [],
-        "resources": [],
         "containers": [],
         "other": []
     }
@@ -98,8 +97,6 @@ def categorize_submodules(submodules: Dict[str, str]) -> Dict[str, List[str]]:
             categories["bits_deployments"].append(path)
         elif path.startswith("nsls_deployments/"):
             categories["nsls_deployments"].append(path)
-        elif path.startswith("resources/"):
-            categories["resources"].append(path)
         elif path.startswith("containers/"):
             categories["containers"].append(path)
         else:
@@ -121,7 +118,7 @@ def main():
         help="Suggest solutions for access issues"
     )
     parser.add_argument(
-        "--category", choices=["bits_base", "bits_deployments", "nsls_deployments", "resources", "containers"],
+        "--category", choices=["bits_base", "bits_deployments", "nsls_deployments", "containers"],
         help="Check only specific category of submodules"
     )
     

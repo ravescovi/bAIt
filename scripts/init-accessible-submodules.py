@@ -92,7 +92,7 @@ def main():
         help="Try to initialize even repositories that fail access check"
     )
     parser.add_argument(
-        "--category", choices=["bits_base", "bits_deployments", "nsls_deployments", "resources", "containers"],
+        "--category", choices=["bits_base", "bits_deployments", "nsls_deployments", "containers"],
         help="Initialize only specific category of submodules"
     )
     parser.add_argument(
