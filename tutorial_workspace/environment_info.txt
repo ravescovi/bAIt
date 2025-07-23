@@ -1,0 +1,25 @@
+TUTORIAL ENVIRONMENT CONFIGURATION
+====================================
+
+System Detection Results:
+CONDA_PATH: /home/ravescovi/miniconda3/bin/conda
+CONDA_VERSION: 25.5.0
+CONDA_INIT_SCRIPT: /home/ravescovi/miniconda3/etc/profile.d/conda.sh
+
+PODMAN_PATH: /usr/bin/podman
+PODMAN_VERSION: 4.9.3
+
+TIMESTAMP: 2025-07-23 01:50:00
+SYSTEM: Linux-6.8.0-48-generic-x86_64
+
+Tutorial Directory Structure:
+- scripts/     -> Tutorial execution scripts
+- examples/    -> Example project templates
+- configs/     -> Configuration files
+- docs/        -> Documentation and guides
+- test_outputs/-> Test execution results
+
+Path Resolution:
+BITS_DEMO_PATH: /home/ravescovi/workspace/bAIt/bits_base/BITS/src/bits_demo
+TUTORIAL_SCRIPTS: /home/ravescovi/workspace/bAIt/bits_base/BITS/src/bits_demo/scripts
+TUTORIAL_PATH: /home/ravescovi/workspace/bAIt/bits_base/BITS/src/bits_demo/tutorial

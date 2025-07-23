@@ -1,0 +1,35 @@
+# Instrument Configuration for my_beamline
+# This file defines the main instrument configuration
+
+instrument:
+  name: "my_beamline"
+  description: "Example beamline for BITS tutorial"
+  location: "Advanced Photon Source"
+
+# Data management settings
+data_management:
+  catalog: "temp"  # Use temporary catalog for tutorial
+  write_spec_file: true
+  write_nexus_file: false
+  
+# Device configuration
+devices:
+  motors:
+    # Will be populated during device configuration tutorial
+    enabled: true
+    
+  detectors:
+    # Will be populated during device configuration tutorial
+    enabled: true
+
+# Logging configuration
+logging:
+  level: "INFO"
+  console: true
+  file: false
+
+# Callback settings
+callbacks:
+  best_effort: true
+  spec_writer: true
+  nexus_writer: false

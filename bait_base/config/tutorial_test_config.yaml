@@ -1,0 +1,281 @@
+# BITS Tutorial Testing Configuration
+# Configuration for the TutorialTestAgent system
+
+# General Configuration
+tutorial_test:
+  # Tutorial files location (relative to project root)
+  tutorial_path: "bits_base/BITS/src/bits_demo/tutorial"
+  
+  # Base project paths for resolution
+  # IMPORTANT: Users can modify this path to match their local setup
+  # This replaces '/path/to/bits_demo' and 'bits_demo/' in tutorial commands
+  # Examples:
+  #   - For local development: "bits_base/BITS/src/bits_demo"
+  #   - For custom location: "my_custom_path/bits_demo"
+  #   - For absolute path: "/home/user/projects/bits_demo" 
+  bits_demo_path: "bits_base/BITS/src/bits_demo"
+  
+  # Default tutorial files to test (in execution order)
+  default_tutorial_files:
+    - "00_introduction.md"
+    - "01_ioc_exploration.md"
+    - "02_bits_starter_setup.md"
+    - "03_device_configuration.md" 
+    - "04_plan_development.md"
+    - "05_ipython_execution.md"
+  
+  # Execution settings
+  max_retries: 3
+  step_timeout: 300  # seconds (5 minutes)
+  clean_environment: true
+  stop_on_failure: false
+
+# Container Configuration
+container_config:
+  # Prefer podman over docker
+  prefer_podman: true
+  
+  # Container startup timeout
+  container_timeout: 90  # seconds
+  
+  # IOC health check timeout
+  health_check_timeout: 60  # seconds
+  
+  # Container configurations
+  containers:
+    adsim_ioc:
+      image: "epics-podman:latest"
+      name: "adsim_ioc"
+      args: ["adsim"]  # IOC type argument
+      options: ["--net=host", "-d"]  # Detached mode with host networking
+      environment:
+        PREFIX: "adsim:"
+      healthcheck:
+        command: "caget adsim:cam1:Acquire_RBV"
+        timeout: 10
+        retries: 3
+        interval: 5
+      startup_timeout: 90
+      
+    gp_ioc:
+      image: "epics-podman:latest"
+      name: "gp_ioc"
+      args: ["gp"]  # IOC type argument
+      options: ["--net=host", "-d"]  # Detached mode with host networking
+      environment:
+        PREFIX: "gp:"
+      healthcheck:
+        command: "caget gp:m1.RBV"
+        timeout: 10
+        retries: 3
+        interval: 5
+      startup_timeout: 60
+
+# Parser Configuration
+parser_config:
+  # Executable code block languages
+  executable_languages:
+    - "bash"
+    - "sh"
+    - "shell"
+    - "python"
+    - "py"
+    - "console"
+    - "terminal"
+  
+  # Command timeout calculations
+  timeout_rules:
+    container_commands: 300    # Container operations (5 min)
+    package_install: 180      # Package installation (3 min)
+    git_clone: 120           # Git operations (2 min)
+    default: 60              # Default timeout (1 min)
+
+# Fix Agent Configuration
+fixer_config:
+  # Minimum confidence threshold for applying fixes
+  min_confidence: 0.5
+  
+  # Maximum fix attempts per issue
+  max_fix_attempts: 2
+  
+  # Auto-fix categories (issues that can be automatically fixed)
+  auto_fix_categories:
+    - "environment"
+    - "dependency"  
+    - "permission"
+    - "container"
+    
+  # Issues requiring manual intervention
+  manual_intervention_categories:
+    - "syntax"
+    - "logic"
+    - "hardware"
+
+# Retry Configuration
+retry_config:
+  # Default retry strategy
+  default_strategy: "adaptive"  # linear, exponential, adaptive
+  
+  # Base delay between retries (seconds)
+  base_delay: 5
+  
+  # Maximum delay between retries (seconds) 
+  max_delay: 60
+  
+  # Maximum retry attempts per step
+  max_attempts: 3
+  
+  # Issue-specific retry patterns
+  retry_patterns:
+    container:
+      strategy: "exponential"
+      max_attempts: 3
+      base_delay: 10
+      requires_reset: true
+      
+    dependency:
+      strategy: "linear"
+      max_attempts: 2
+      base_delay: 5
+      requires_reset: false
+      
+    network:
+      strategy: "exponential" 
+      max_attempts: 4
+      base_delay: 5
+      requires_reset: false
+      
+    environment:
+      strategy: "linear"
+      max_attempts: 2
+      base_delay: 3
+      requires_reset: true
+      
+    permission:
+      strategy: "linear"
+      max_attempts: 2
+      base_delay: 2
+      requires_reset: false
+
+# Validation Configuration
+validation_config:
+  # Post-execution validation commands
+  validation_commands:
+    conda_env_check: "conda info --envs | grep BITS_demo"
+    container_health: "podman ps --filter 'status=running' --filter 'name=adsim_ioc' --filter 'name=gp_ioc'"
+    pv_connectivity: "timeout 10 caget adsim:cam1:Acquire_RBV gp:m1.RBV"
+    python_imports: "python -c 'import bluesky, apstools, bits_base.BITS'"
+  
+  # Validation timeouts
+  validation_timeout: 30  # seconds
+  
+  # Required success criteria
+  success_criteria:
+    min_success_rate: 0.8    # 80% of steps must pass
+    max_critical_issues: 0   # No critical issues allowed
+    container_health: true   # All containers must be healthy
+
+# Reporting Configuration  
+reporting_config:
+  # Report output directory
+  output_dir: "tutorial_test_reports"
+  
+  # Report formats
+  formats:
+    - "json"    # Machine-readable results
+    - "html"    # Human-readable report  
+    - "text"    # Console output
+  
+  # Include detailed logs in reports
+  include_logs: true
+  
+  # Maximum log lines per step
+  max_log_lines: 100
+  
+  # Generate recommendations
+  generate_recommendations: true
+
+# Logging Configuration
+logging_config:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  
+  # Log to file
+  log_to_file: true
+  log_file: "tutorial_test.log"
+  
+  # Log format
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Rotate log files
+  rotate_logs: true
+  max_log_size: "10MB"
+  backup_count: 5
+
+# Environment Configuration
+environment_config:
+  # Required environment variables
+  required_env_vars:
+    - "HOME"
+    - "PATH"
+  
+  # EPICS environment setup
+  epics_env:
+    EPICS_CA_ADDR_LIST: "127.0.0.1"
+    EPICS_CA_AUTO_ADDR_LIST: "NO"
+    EPICS_CA_MAX_ARRAY_BYTES: "2000000"
+  
+  # Python environment requirements
+  python_requirements:
+    min_version: "3.11"
+    required_packages:
+      - "bluesky[complete]"
+      - "apstools" 
+      - "bits-base"
+      - "podman"  # For container management
+
+# Performance Configuration
+performance_config:
+  # Execution monitoring
+  monitor_resources: true
+  
+  # Resource thresholds (warnings)
+  resource_thresholds:
+    max_cpu_percent: 80
+    max_memory_mb: 4096
+    max_disk_usage_mb: 1024
+  
+  # Parallel execution settings
+  enable_parallel: false  # Conservative default
+  max_parallel_steps: 2
+
+# Integration Configuration
+integration_config:
+  # CI/CD integration
+  ci_mode: false
+  
+  # GitHub Actions settings
+  github_actions:
+    create_issues: false
+    issue_labels: 
+      - "tutorial"
+      - "bug" 
+      - "automated"
+  
+  # MCP server integration
+  mcp_integration:
+    enabled: false
+    server_endpoint: "localhost:8000"
+
+# Development/Debug Configuration
+debug_config:
+  # Enable debug mode
+  debug_mode: false
+  
+  # Skip certain steps for faster testing
+  skip_slow_steps: false
+  
+  # Mock container operations (for development)
+  mock_containers: false
+  
+  # Dry run mode (parse only, don't execute)
+  dry_run: false

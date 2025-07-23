@@ -154,6 +154,9 @@ cython_debug/
 # PyCharm
 .idea/
 
+# setuptools_scm
+_version.py
+
 # bAIt specific ignores
 # Analysis cache directories
 bait_deployments/*/analysis_cache/
@@ -213,14 +216,42 @@ Temporary Items
 *.req~
 *.iocsh~
 
-# Log files
+# Log files (comprehensive patterns)
 *.log
+*.log.*
 *.out
+tutorial_test.log*
+screenlog.*
+mViewer.log
+
+# Tutorial test reports and outputs
+tutorial_test_reports/
+tutorial_improvement_reports/
+*.backup
+
+# Cache and temporary directories
+cache/
+*.tmp
+*.temp
 
 # Configuration files that might contain sensitive information  
 **/local_config.json
 **/secrets.json
 **/*.secret
+
+# User-defined and development content
+dev_*
+user_plans/
+notes_*.md
+_notes*.md
+issue*.py
+
+# Legacy and cleanup directories
+old_code/
+.deleted/
+
+# Local Run Engine metadata dictionary
+.re_md_dict.yml
 
 # Large data files that shouldn't be in version control
 *.hdf5

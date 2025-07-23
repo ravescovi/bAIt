@@ -1,0 +1,25 @@
+# Device Configuration for my_beamline
+# This file will be populated during the device configuration tutorial
+
+motors:
+  # Example motor configuration (will be updated with actual IOC PVs)
+  m1:
+    pv_prefix: "gp:m1"
+    labels: ["motors", "sample_motors"]
+    
+  m2:
+    pv_prefix: "gp:m2"
+    labels: ["motors", "sample_motors"]
+
+detectors:
+  # Example detector configuration (will be updated with actual IOC PVs)
+  scaler1:
+    pv_prefix: "gp:scaler1"
+    labels: ["detectors", "scalers"]
+    channels:
+      - name: "time"
+        number: 1
+      - name: "I0"
+        number: 2
+      - name: "diode"
+        number: 3

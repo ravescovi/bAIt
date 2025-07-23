@@ -1,0 +1,38 @@
+tutorial_test:
+  # Environment paths
+  conda_path: "/home/ravescovi/miniconda3"
+  conda_init_script: "/home/ravescovi/miniconda3/etc/profile.d/conda.sh"
+  
+  # Tutorial paths
+  bits_demo_path: "bits_base/BITS/src/bits_demo"
+  tutorial_workspace: "tutorial_workspace"
+  
+  # Script locations
+  script_paths:
+    - "/home/ravescovi/workspace/bAIt/bits_base/BITS/src/bits_demo/scripts"
+    - "/home/ravescovi/workspace/bAIt/tutorial_workspace/scripts"
+  
+  # Container configuration
+  container_config:
+    runtime: "podman"
+    image: "epics-podman:latest"
+    network: "host"
+    
+  # Path mappings for tutorial parser
+  path_mappings:
+    '/path/to/bits_demo': "/home/ravescovi/workspace/bAIt/bits_base/BITS/src/bits_demo"
+    'scripts/explore_iocs.py': "/home/ravescovi/workspace/bAIt/bits_base/BITS/src/bits_demo/scripts/explore_iocs.py"
+    '/home/ravescovi/workspace/bAIt/scripts/': "/home/ravescovi/workspace/bAIt/bits_base/BITS/src/bits_demo/scripts/"
+    'tutorial_workspace/': "/home/ravescovi/workspace/bAIt/tutorial_workspace/"
+
+# Retry and execution settings
+retry_config:
+  max_retries: 3
+  timeout: 300
+  adaptive_timeout: true
+
+# Debug and development settings
+debug_config:
+  verbose_logging: true
+  preserve_temp_files: false
+  mock_containers: false

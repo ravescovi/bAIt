@@ -1,0 +1,235 @@
+# BITS Tutorial Validation Rules
+# Defines expected outcomes and validation criteria for each tutorial step
+
+validation_rules:
+  # Step 00: Introduction & Prerequisites
+  step_00:
+    description: "Tutorial Introduction & Prerequisites"
+    validation_type: "informational"
+    expected_outcomes:
+      - "User understands tutorial objectives"
+      - "Prerequisites are met"
+    validation_criteria:
+      - "Python 3.11+ available"
+      - "Git installed"
+      - "Podman or Docker available"
+      - "Sufficient system resources"
+    commands: []
+    
+  # Step 01: IOC Exploration
+  step_01:
+    description: "IOC Exploration and Device Discovery"
+    validation_type: "container_operational"
+    expected_outcomes:
+      - "Demo IOCs are running"
+      - "PV connections established"
+      - "Device listings generated"
+    validation_criteria:
+      - "Containers adsim_ioc and gp_ioc are running"
+      - "caget adsim:cam1:Acquire_RBV returns value"
+      - "caget gp:m1.RBV returns value"
+      - "PV lists are generated"
+    commands:
+      - "podman ps | grep -E '(adsim_ioc|gp_ioc)'"
+      - "timeout 10 caget adsim:cam1:Acquire_RBV"
+      - "timeout 10 caget gp:m1.RBV" 
+    timeout: 120
+    
+  # Step 02: BITS-Starter Setup
+  step_02:
+    description: "BITS-Starter Template Setup"
+    validation_type: "environment_setup"
+    expected_outcomes:
+      - "Conda environment BITS_demo created"
+      - "BITS packages installed"
+      - "Project directory structure created"
+    validation_criteria:
+      - "Conda environment BITS_demo exists"
+      - "BITS packages are importable"
+      - "Project directory has correct structure"
+    commands:
+      - "conda info --envs | grep BITS_demo"
+      - "python -c 'import bluesky; print(bluesky.__version__)'"
+      - "python -c 'import apstools; print(apstools.__version__)'"
+      - "python -c 'import bits_base.BITS'"
+      - "ls -la | grep -E '(startup|configs|devices)'"
+    timeout: 300
+    
+  # Step 03: Device Configuration  
+  step_03:
+    description: "Device Configuration and Setup"
+    validation_type: "device_configuration"
+    expected_outcomes:
+      - "Device configurations are created"
+      - "Bluesky devices are instantiated"
+      - "Device connectivity verified"
+    validation_criteria:
+      - "Device YAML files exist"
+      - "Python device objects created"
+      - "Devices can be read"
+    commands:
+      - "ls configs/ | grep -E '(devices|iconfig)'"
+      - "python -c 'from devices import *; print(list(globals().keys()))'"
+    timeout: 180
+    
+  # Step 04: Plan Development
+  step_04:
+    description: "Scan Plan Development"
+    validation_type: "plan_development"
+    expected_outcomes:
+      - "Custom scan plans defined"
+      - "Plans can be executed"
+      - "Data collection works"
+    validation_criteria:
+      - "Plan files exist"
+      - "Plans are importable"
+      - "RunEngine can execute plans"
+    commands:
+      - "ls plans/ | grep '.py'"
+      - "python -c 'from plans import *; print([p for p in dir() if not p.startswith(\"_\")])'"
+    timeout: 180
+    
+  # Step 05: Interactive Execution
+  step_05:
+    description: "Interactive IPython Execution"
+    validation_type: "interactive_execution"
+    expected_outcomes:
+      - "IPython session can be started"
+      - "Devices are accessible"
+      - "Plans can be executed interactively"
+    validation_criteria:
+      - "IPython starts without errors"
+      - "Bluesky imports successful"
+      - "RunEngine is operational"
+    commands:
+      - "python -c 'import IPython; print(IPython.__version__)'"
+      - "python -c 'from bluesky import RunEngine; RE = RunEngine(); print(\"RunEngine ready\")'"
+    timeout: 120
+
+# Common Validation Patterns
+common_patterns:
+  container_health:
+    description: "Verify container health"
+    commands:
+      - "podman ps --filter 'status=running' --format '{{.Names}}' | grep -E '(adsim_ioc|gp_ioc)'"
+      - "timeout 10 caget adsim:cam1:Acquire_RBV"
+      - "timeout 10 caget gp:m1.RBV"
+    success_criteria:
+      - "Both containers running"
+      - "PV values returned within timeout"
+      
+  python_environment:
+    description: "Verify Python environment"
+    commands:
+      - "python --version"
+      - "conda info --envs | grep BITS_demo"
+      - "python -c 'import sys; print(sys.executable)'"
+    success_criteria:
+      - "Python 3.11+"
+      - "BITS_demo environment active"
+      
+  package_imports:
+    description: "Verify package availability"
+    commands:
+      - "python -c 'import bluesky; print(f\"bluesky {bluesky.__version__}\")'"
+      - "python -c 'import apstools; print(f\"apstools {apstools.__version__}\")'" 
+      - "python -c 'import ophyd; print(f\"ophyd {ophyd.__version__}\")'"
+      - "python -c 'import databroker; print(f\"databroker {databroker.__version__}\")'"
+    success_criteria:
+      - "All imports successful"
+      - "Version information displayed"
+
+# Error Patterns and Expected Failures
+error_patterns:
+  # Common failure modes and expected fixes
+  container_startup_failure:
+    pattern: "container.*startup.*failed"
+    severity: "critical"
+    expected_fix: "restart_containers"
+    retry_recommended: true
+    
+  pv_connection_timeout:
+    pattern: "(caget.*timeout|PV.*not.*found)"
+    severity: "major" 
+    expected_fix: "wait_for_ioc_ready"
+    retry_recommended: true
+    
+  conda_env_missing:
+    pattern: "conda.*environment.*not.*exist"
+    severity: "major"
+    expected_fix: "create_conda_environment"
+    retry_recommended: true
+    
+  package_import_error:
+    pattern: "ModuleNotFoundError.*No module named"
+    severity: "major"
+    expected_fix: "install_missing_package"
+    retry_recommended: true
+    
+  permission_denied:
+    pattern: "Permission denied"
+    severity: "major"
+    expected_fix: "fix_permissions"
+    retry_recommended: false
+
+# Success Indicators
+success_indicators:
+  # Patterns that indicate successful execution
+  container_running:
+    patterns:
+      - "container.*running"
+      - "IOC.*ready"
+      - "Started.*successfully"
+      
+  pv_accessible:
+    patterns:
+      - "caget.*[0-9]+"  # PV returns numeric value
+      - "connection.*established"
+      
+  environment_ready:
+    patterns:
+      - "environment.*activated"
+      - "packages.*installed"
+      - "imports.*successful"
+      
+  execution_complete:
+    patterns:
+      - "completed.*successfully"
+      - "finished.*without.*error"
+      - "test.*passed"
+
+# Validation Timeouts
+timeouts:
+  container_startup: 90    # seconds
+  pv_connection: 30       # seconds  
+  package_install: 180    # seconds
+  environment_setup: 300  # seconds
+  command_execution: 60   # seconds
+  validation_check: 30    # seconds
+
+# Critical Validation Points
+critical_validations:
+  # These must pass for tutorial to be considered successful
+  - name: "container_health"
+    description: "Both IOC containers must be running and responsive"
+    commands: ["podman ps | grep -E '(adsim_ioc|gp_ioc)'"]
+    required: true
+    
+  - name: "pv_connectivity"
+    description: "PVs must be accessible from both IOCs"
+    commands: 
+      - "timeout 10 caget adsim:cam1:Acquire_RBV"
+      - "timeout 10 caget gp:m1.RBV"
+    required: true
+    
+  - name: "python_environment"
+    description: "Python environment must have required packages"
+    commands:
+      - "python -c 'import bluesky, apstools, ophyd, databroker'"
+    required: true
+    
+  - name: "bits_framework"
+    description: "BITS framework must be importable"
+    commands:
+      - "python -c 'import bits_base.BITS'"
+    required: true
