@@ -350,3 +350,5 @@ The framework automatically detects if running:
 - Maintain docstrings for all public APIs
 - Use Sphinx for documentation generation
 - Include examples in docstrings where appropriate
+- **All markdown documentation files (except README.md) must be placed in the docs/ directory**
+- No .md files should be created at the repository root level
