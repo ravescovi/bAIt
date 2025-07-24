@@ -64,3 +64,6 @@
 [submodule "bits_deployments/tst-nsls-bits"]
 	path = bits_deployments/tst-nsls-bits
 	url = https://github.com/ravescovi/tst-nsls-bits.git
+[submodule "bits_deployments/bmm-nsls-bits"]
+	path = bits_deployments/bmm-nsls-bits
+	url = https://github.com/ravescovi/bmm-nsls-bits.git
