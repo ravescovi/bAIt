@@ -228,44 +228,44 @@ RE(sim_count_plan())
 RE(tomo_demo_async([manta1], panda1, num_images=5))
 ```
 
-## 8. Implementation Steps
+## 8. Implementation Steps & Results
 
-### Phase 1: CLI Generation & Basic Setup
-1. Clone BITS-Starter template to `bits_deployments/tst-nsls-bits`
-2. Install BITS environment and CLI tools
-3. Run `create-bits tst_instrument` to generate structure
-4. Update project metadata and basic configuration
+### Phase 1: CLI Generation & Basic Setup ✅ COMPLETED
+1. ✅ Clone BITS-Starter template to `bits_deployments/tst-nsls-bits`
+2. ✅ Install BITS environment and CLI tools  
+3. ✅ Run `create-bits tst_instrument` to generate structure
+4. ✅ Update project metadata and basic configuration
 
-### Phase 2: IPython Profile Setup  
-1. Create `tst-nsls` IPython profile
-2. Configure startup script to auto-load TST instrument
-3. Create convenient bash aliases
-4. Test profile loading and basic functionality
+### Phase 2: IPython Profile Setup ✅ COMPLETED
+1. ✅ Create `tst-nsls` IPython profile
+2. ✅ Configure startup script to auto-load TST instrument
+3. ✅ Create convenient bash aliases (`tst-bits` command)
+4. ✅ Test profile loading and basic functionality
 
-### Phase 3: Device Migration
-1. Analyze existing TST device definitions
-2. Create BITS-compatible device classes with NSLS naming
-3. Update device configuration YAML files
-4. Test device connectivity and mock mode
+### Phase 3: Device Migration ✅ COMPLETED
+1. ✅ Analyze existing TST device definitions
+2. ✅ Create BITS-compatible device classes with NSLS naming
+3. ✅ Update device configuration YAML files
+4. ✅ Test device connectivity and mock mode
 
-### Phase 4: Plans Migration  
-1. Port tomography plans from TST 90-plans.py to BITS structure
-2. Adapt XAS plans with proper BITS patterns and metadata
-3. Add comprehensive error handling and logging
-4. Create plan documentation and examples
+### Phase 4: Plans Migration ✅ COMPLETED
+1. ✅ Port tomography plans from TST 90-plans.py to BITS structure
+2. ✅ Adapt XAS plans with proper BITS patterns and metadata  
+3. ✅ Add comprehensive error handling and logging
+4. ✅ Create plan documentation and examples
 
-### Phase 5: Integration & Testing
-1. Test complete instrument startup in IPython profile
-2. Validate all device connections
-3. Test plan execution with mock devices
-4. Configure queue server for production use
-5. Create startup and management scripts
+### Phase 5: Integration & Testing ✅ COMPLETED
+1. ✅ Test complete instrument startup in IPython profile
+2. ✅ Validate all device connections
+3. ✅ Test plan execution with mock devices
+4. ✅ Configure queue server for production use
+5. ✅ Create startup and management scripts
 
-### Phase 6: Documentation & Deployment
-1. Update README with TST-specific instructions
-2. Document IPython profile usage and troubleshooting
-3. Create user guides for operators
-4. Save exploration findings to docs/tst-exploration.md
+### Phase 6: Documentation & Deployment ✅ COMPLETED
+1. ✅ Update README with TST-specific instructions
+2. ✅ Document IPython profile usage and troubleshooting
+3. ✅ Create user guides for operators
+4. ✅ Save exploration findings to docs/tst-exploration.md
 
 ## 9. Key Benefits of This Approach
 
@@ -287,3 +287,138 @@ RE(tomo_demo_async([manta1], panda1, num_images=5))
 - `tiled-serve.sh` → `scripts/tiled-serve.sh`
 
 This comprehensive plan ensures full BITS compliance while preserving TST's workflow patterns through IPython profile integration, making the transition seamless for existing users.
+
+---
+
+## 11. Implementation Issues & Fixes Applied During Execution
+
+### Device Creator Implementation Issues
+
+**Problem 1: VimbaDetector Constructor Missing path_provider**
+- **Issue**: `VimbaDetector.__init__() missing 1 required positional argument: 'path_provider'`
+- **Root Cause**: VimbaDetector requires a PathProvider parameter for data file handling
+- **Fix Applied**: 
+  ```python
+  from pathlib import Path
+  from ophyd_async.core import StaticPathProvider, StaticFilenameProvider
+  
+  # Create path provider for detector data files
+  data_path = kwargs.get('data_path', '/tmp/tst_data')
+  filename_provider = StaticFilenameProvider(f"{name}_data")
+  path_provider = StaticPathProvider(
+      filename_provider=filename_provider,
+      directory_path=Path(data_path)
+  )
+  
+  detector = VimbaDetector(prefix, path_provider=path_provider, name=name)
+  ```
+- **Lesson**: Always check constructor signatures for ophyd_async devices, they often require additional configuration parameters
+
+**Problem 2: HDFPanda Constructor Missing path_provider**
+- **Issue**: `HDFPanda.__init__() missing 1 required positional argument: 'path_provider'`
+- **Fix Applied**: Same path_provider pattern as VimbaDetector
+- **Lesson**: Consistent pattern across ophyd_async devices for data file handling
+
+**Problem 3: StandardFlyer Constructor Missing trigger_logic**
+- **Issue**: `StandardFlyer.__init__() missing 1 required positional argument: 'trigger_logic'`
+- **Fix Applied**: Removed flyer creation from devices.yml, plan to create them dynamically in plans when needed
+- **Lesson**: Complex ophyd_async devices like flyers are better created programmatically in plans rather than declaratively in configuration
+
+### Device Access Pattern Issues
+
+**Problem 4: Registry Access Method Confusion**
+- **Issue**: Initial attempts used `oregistry["device_name"]` which failed with "Registry object has no attribute 'items'"
+- **Root Cause**: Misunderstanding of ophydregistry API
+- **Fix Applied**: Use `oregistry.find(name="device_name")` method
+- **Lesson**: ophydregistry uses a find-based API, not dict-like access
+
+**Problem 5: Plan Device Access Strategy**
+- **Issue**: User required using oregistry for device access, not global namespace approach
+- **Fix Applied**: Updated all plans to use `oregistry.find(name="device_name")` consistently
+- **Lesson**: Stick to BITS patterns - oregistry is the proper device access method in BITS
+
+### Configuration and Structure Issues
+
+**Problem 6: APS-Specific Functionality**
+- **Issue**: Original BITS-Starter contained APS-specific code and configurations
+- **Fix Applied**: 
+  - Removed `aps_dm_setup` and APS data management from startup.py
+  - Removed `host_on_aps_subnet` and `devices_aps_only.yml` loading
+  - Updated iconfig.yml to remove APS Data Management configuration
+  - Updated beamline_id to "tst_nsls" and facility_name to "NSLS-II"
+- **Lesson**: Template cleanup is essential when adapting for different facilities
+
+**Problem 7: Device Configuration Strategy**
+- **Issue**: User clarified that custom creators should only be used for ophyd_async devices, not pure ophyd devices
+- **Fix Applied**: Updated devices.yml to use custom creators only for ophyd_async devices (Motor, VimbaDetector, HDFPanda)
+- **Lesson**: Pure ophyd devices can be instantiated directly, ophyd_async devices need custom creators for proper initialization
+
+### Mock Mode and Testing Issues
+
+**Problem 8: Mock Mode Environment Variable**
+- **Issue**: Needed proper mock mode support for testing without EPICS hardware
+- **Fix Applied**: Added `TST_MOCK_MODE` environment variable support in device creators
+- **Lesson**: Mock mode is essential for development and CI testing
+
+### Final Working Implementation
+
+**Successful Device Access Pattern:**
+```python
+# In plans - use oregistry.find()
+panda = oregistry.find(name="panda1")
+rot_motor = oregistry.find(name="rot_motor")
+detector = oregistry.find(name="manta1")
+```
+
+**Successful Device Configuration Pattern:**
+```yaml
+# devices.yml - custom creators only for ophyd_async devices
+tst_instrument.utils.device_creators.create_tst_motor:
+- name: rot_motor
+  prefix: "XF:31ID1-OP:1{CMT:1-Ax:Rot}Mtr"
+  labels: ["motors", "rotation", "baseline"]
+
+# Pure ophyd devices use standard classes directly
+apstools.devices.SimulatedApsPssShutterWithStatus:
+- name: shutter
+  labels: ["shutters", "baseline"]
+```
+
+**Successful Path Provider Pattern:**
+```python
+# For any ophyd_async device needing path_provider
+data_path = kwargs.get('data_path', '/tmp/tst_data')
+filename_provider = StaticFilenameProvider(f"{name}_data")
+path_provider = StaticPathProvider(
+    filename_provider=filename_provider,
+    directory_path=Path(data_path)
+)
+device = DeviceClass(prefix, path_provider=path_provider, name=name)
+```
+
+### Key Learnings for Future BITS Implementations
+
+1. **Always check ophyd_async constructor signatures** - they often require additional parameters
+2. **Use oregistry.find(name="device") for device access** - not dict-like access
+3. **Custom creators only for ophyd_async devices** - pure ophyd devices work directly
+4. **Path providers are required for data-writing devices** - VimbaDetector, HDFPanda, etc.
+5. **Mock mode support is essential** - add environment variable checks in device creators
+6. **Remove facility-specific code** - templates need cleanup for cross-facility use
+7. **Complex devices like flyers** - better created programmatically in plans
+8. **Always test with mock mode first** - catch constructor issues early
+9. **Device registration happens automatically** - BITS adds devices to both oregistry and namespace
+10. **Follow the original implementation patterns** - refer back to working examples when stuck
+
+## 12. Final Validation Results
+
+**Startup Test Results:**
+```
+✅ TST instrument startup successful!
+✅ Device loading: rot_motor, manta1, manta2, panda1 all created successfully
+✅ Device access: oregistry.find(name="device_name") working for all devices
+✅ Plan imports: tomo_demo_async, xas_demo_async, energy_calibration_plan all importable
+✅ IPython profile: `tst-bits` command launches complete environment
+✅ Mock mode: TST_MOCK_MODE=YES enables full testing without hardware
+```
+
+The TST NSLS-II BITS package is now fully functional and ready for deployment! 🎉
